@@ -19,6 +19,8 @@ key                                                                     = os.env
 
 search_client                                                           = SearchClient(service_endpoint, index_name, AzureKeyCredential(key))
 
+
+
 def chat(messages, question):  
     #messages.append({"role": "user", "content": "👤: " + question})  
     
@@ -87,6 +89,9 @@ def clear_session(messages):
     return messages  
   
 def main():  
+    dirname = os.path.dirname(os.path.abspath(__file__))
+    st.logo(dirname + '/pages/logo-gray.png', size="large")
+
     #st.write("m_strVaultURL:" + m_strVaultURL)
     st.title("Ice Cream Bot")  
     st.write("-"*50)
