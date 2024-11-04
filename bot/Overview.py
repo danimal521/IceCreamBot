@@ -1,38 +1,34 @@
 import streamlit as st  
 from style import global_page_style2
-import time
 import os
 from dotenv import load_dotenv
-import requests
 from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
 from openai import AzureOpenAI
 
 load_dotenv()
 
-AZURE_OPENAI_ACCOUNT: str                                               = os.environ["openai_account"]
-AZURE_DEPLOYMENT_MODEL: str                                             = os.environ["model"]
-AZURE_OPENAI_KEY: str                                                   = os.environ["openai_key"]
-service_endpoint                                                        = os.environ["search_service"]
-index_name                                                              = os.environ["index"]
-key                                                                     = os.environ["search_key"]
+AZURE_OPENAI_ACCOUNT: str                                               = os.environ["openai_account"]  #URL of the Azure OpenAI resource
+AZURE_DEPLOYMENT_MODEL: str                                             = os.environ["model"] #Deployment model name
+AZURE_OPENAI_KEY: str                                                   = os.environ["openai_key"] #API key for Azure OpenAI
+service_endpoint                                                        = os.environ["search_service"] #URL of the Azure Search service
+index_name                                                              = os.environ["index"] #Name of the Azure Search index
+key                                                                     = os.environ["search_key"] #API key for Azure Search
 
 search_client                                                           = SearchClient(service_endpoint, index_name, AzureKeyCredential(key))
 
 
 
 def chat(messages, question):  
-    #messages.append({"role": "user", "content": "👤: " + question})  
     
     with st.chat_message("user", avatar="👤"):  
         st.markdown(question)  
     with st.spinner('Processing...'): 
-        #time.sleep(5) 
         messages.append({"role": "assistant", "content": "🤖: " + question})  
 
         GROUNDED_PROMPT="""
         You are a friendly assistant that answers questions about ice cream.
-        answer the question with only the informaion provided in the sources.
+        answer the question with only the information provided in the sources.
         If there isn't enough information below, say you don't know.
         Do not generate answers that don't use the sources below.      
         Sources:\n{sources}   
@@ -92,11 +88,9 @@ def main():
     dirname = os.path.dirname(os.path.abspath(__file__))
     st.logo(dirname + '/pages/logo-gray.png', size="large")
 
-    #st.write("m_strVaultURL:" + m_strVaultURL)
     st.title("Ice Cream Bot")  
     st.write("-"*50)
-    # clear_chat_placeholder = st.empty()  
-      
+
     if 'messages' not in st.session_state:  
         st.session_state.messages = []  
   
